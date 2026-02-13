@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeFi Advisor Agent</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0a0e27;
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 0;
+            border-bottom: 2px solid #1a1f3a;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #8b92b0;
+            font-size: 1.1rem;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 900px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: #151a33;
+            border: 1px solid #1f2542;
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .card h2 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #fff;
+            border-bottom: 1px solid #1f2542;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #8b92b0;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            background: #0a0e27;
+            border: 1px solid #1f2542;
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background: #2a2f4a;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .status {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .status.show {
+            display: block;
+        }
+
+        .status.loading {
+            background: #1a3a52;
+            border: 1px solid #2563eb;
+            color: #60a5fa;
+        }
+
+        .status.error {
+            background: #3a1a1a;
+            border: 1px solid #dc2626;
+            color: #f87171;
+        }
+
+        .status.success {
+            background: #1a3a2a;
+            border: 1px solid #059669;
+            color: #34d399;
+        }
+
+        .result-section {
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+        }
+
+        .recommendation {
+            background: #1a1f3a;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .recommendation .decision {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .recommendation .decision.EXECUTE {
+            color: #34d399;
+        }
+
+        .recommendation .decision.HOLD {
+            color: #fbbf24;
+        }
+
+        .recommendation .decision.REDUCE_AMOUNT {
+            color: #fb923c;
+        }
+
+        .recommendation .decision.REJECT {
+            color: #f87171;
+        }
+
+        .confidence {
+            display: inline-block;
+            background: #2a2f4a;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
+
+        .risk-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .risk-badge.low {
+            background: #1a3a2a;
+            color: #34d399;
+        }
+
+        .risk-badge.medium {
+            background: #3a2a1a;
+            color: #fbbf24;
+        }
+
+        .risk-badge.high {
+            background: #3a1a1a;
+            color: #f87171;
+        }
+
+        .reasoning {
+            margin-top: 15px;
+            padding: 15px;
+            background: #0a0e27;
+            border-radius: 8px;
+            line-height: 1.8;
+        }
+
+        .guardrails {
+            background: #1a1f3a;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .guardrail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #2a2f4a;
+        }
+
+        .guardrail-item:last-child {
+            border-bottom: none;
+        }
+
+        .guardrail-label {
+            color: #8b92b0;
+        }
+
+        .guardrail-value {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .market-data {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .market-card {
+            background: #1a1f3a;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .market-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .market-stat {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            font-size: 0.9rem;
+        }
+
+        .market-stat .label {
+            color: #8b92b0;
+        }
+
+        .market-stat .value {
+            font-weight: 600;
+        }
+
+        .positive {
+            color: #34d399;
+        }
+
+        .negative {
+            color: #f87171;
+        }
+
+        .spinner {
+            border: 3px solid #1f2542;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .warning {
+            background: #3a2a1a;
+            border-left: 4px solid #fbbf24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .warning h4 {
+            color: #fbbf24;
+            margin-bottom: 8px;
+        }
+
+        .warning ul {
+            margin-left: 20px;
+            color: #d1a854;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            border-top: 2px solid #1a1f3a;
+            margin-top: 40px;
+            color: #8b92b0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🤖 DeFi Advisor Agent</h1>
+            <p class="subtitle">AI-Powered Trading Analysis with Risk Controls</p>
+        </header>
+
+        <div class="main-grid">
+            <!-- Input Form -->
+            <div class="card">
+                <h2>Request Trade Analysis</h2>
+                
+                <form id="adviceForm">
+                    <div class="form-group">
+                        <label for="action">Action</label>
+                        <select id="action" required>
+                            <option value="SWAP">Swap</option>
+                            <option value="ADD_LIQUIDITY">Add Liquidity</option>
+                            <option value="REMOVE_LIQUIDITY">Remove Liquidity</option>
+                            <option value="STAKE">Stake</option>
+                            <option value="UNSTAKE">Unstake</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fromToken">From Token</label>
+                        <input type="text" id="fromToken" placeholder="ETH" value="ETH" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="toToken">To Token</label>
+                        <input type="text" id="toToken" placeholder="USDC" value="USDC" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="amount">Amount (in wei/smallest unit)</label>
+                        <input type="text" id="amount" placeholder="1000000000000000000" value="1000000000000000000" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="riskProfile">Risk Profile</label>
+                        <select id="riskProfile">
+                            <option value="conservative">Conservative</option>
+                            <option value="moderate" selected>Moderate</option>
+                            <option value="aggressive">Aggressive</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" id="submitBtn">
+                        Get AI Advice
+                    </button>
+                </form>
+
+                <div id="status" class="status"></div>
+            </div>
+
+            <!-- Results -->
+            <div class="card">
+                <h2>Analysis Results</h2>
+                
+                <div id="results" class="result-section">
+                    <!-- Recommendation -->
+                    <div class="recommendation">
+                        <div>
+                            <span class="decision" id="decision"></span>
+                            <span class="confidence" id="confidence"></span>
+                            <span class="risk-badge" id="riskBadge"></span>
+                        </div>
+                        <div class="reasoning" id="reasoning"></div>
+                        <div id="warningsContainer"></div>
+                    </div>
+
+                    <!-- Guardrails -->
+                    <div class="guardrails">
+                        <h3>🛡️ Risk Controls</h3>
+                        <div id="guardrailsContent"></div>
+                    </div>
+
+                    <!-- Market Analysis -->
+                    <div>
+                        <h3>📈 Market Analysis</h3>
+                        <div class="market-data" id="marketData"></div>
+                    </div>
+                </div>
+
+                <div id="emptyState" style="text-align: center; padding: 60px 20px; color: #8b92b0;">
+                    <div style="font-size: 4rem; margin-bottom: 20px;">📊</div>
+                    <p>Submit a trade request to get AI-powered analysis</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Built for SKALE Web3 Agentic Hackathon</p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">Powered by Claude Sonnet 4 • SKALE Network</p>
+        </footer>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>

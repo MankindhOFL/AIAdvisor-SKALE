@@ -1,0 +1,40 @@
+{
+  "name": "defi-advisor-agent",
+  "version": "1.0.0",
+  "description": "AI-powered DeFi trading advisor with x402 payments and risk controls",
+  "type": "module",
+  "scripts": {
+    "dev:server": "tsx watch src/server/index.ts",
+    "dev:client": "tsx watch src/client/index.ts",
+    "build": "tsc",
+    "start:server": "node dist/server/index.js",
+    "start:client": "node dist/client/index.js",
+    "verify": "tsx verify-setup.ts"
+  },
+  "keywords": [
+    "x402",
+    "skale",
+    "defi",
+    "ai-agent",
+    "web3",
+    "trading"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1",
+    "@hono/node-server": "^1.19.9",
+    "@x402/core": "^2.3.1",
+    "@x402/evm": "^2.3.1",
+    "axios": "^1.7.9",
+    "dotenv": "^16.6.1",
+    "ethers": "^6.16.0",
+    "hono": "^4.11.9",
+    "viem": "^2.45.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
