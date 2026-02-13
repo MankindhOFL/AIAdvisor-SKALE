@@ -8,9 +8,6 @@ An autonomous agent that provides professional DeFi trading advice using Claude 
 
 This project is **fully functional** for the hackathon demo. The x402 payment integration code is ready but temporarily simplified due to package version availability. See [X402_STATUS.md](X402_STATUS.md) for details. **All core features work perfectly** - AI analysis, risk controls, data aggregation, and audit logging.
 
-## 🎯 Hackathon Track
-
-**Track 1**: Best Trading/DeFi Agent with Risk Controls
 
 ## ✨ Key Features
 
@@ -74,12 +71,6 @@ npm install
 ```
 
 ### 2. Configuration
-
-Copy `.env.example` to `.env` and configure:
-
-```bash
-cp .env.example .env
-```
 
 Edit `.env` with your values:
 
@@ -289,6 +280,11 @@ defi-advisor-agent/
 ├── package.json
 └── README.md
 ```
+## FRONTEND 
+
+visit : https://aiadvisor-skale.vercel.app/
+
+note: Dev server must be running to interact with frontend.
 
 ## 🏆 Hackathon Criteria
 
