@@ -67,7 +67,7 @@ This project is **fully functional** for the hackathon demo. The x402 payment in
 
 ```bash
 # Clone or download the project
-cd defi-advisor-agent
+cd Updated-AIAdvisor
 
 # Install dependencies
 npm install
@@ -317,16 +317,6 @@ defi-advisor-agent/
 - [SKALE Testnet Faucet](https://faucet.skale.space)
 - [SKALE Explorer](https://base-sepolia-testnet-explorer.skalenodes.com)
 
-## 🎬 Demo Video Script
-
-1. **Show server starting** (Terminal 1)
-2. **Run client demo** (Terminal 2)
-3. **Highlight key moments**:
-   - Payment transaction logs
-   - AI reasoning display
-   - Guardrails generation
-   - Different risk profiles
-4. **Show audit logs** (`cat logs/audit-*.jsonl`)
 
 ## 🐛 Troubleshooting
 
@@ -349,6 +339,12 @@ defi-advisor-agent/
 MIT
 
 ## 👥 Team
+
+- **Team Lead**: [Awwal Makinde] - [mankindhhawwal@gmail.com]
+- **GitHub**: [MankindhOFL]
+- **Twitter**: [@OFLtoyou, @OFLonchain]
+- **Discord**: [mankindh_ofl]
+
 
 Built for SKALE Web3 Agentic Hackathon
 
